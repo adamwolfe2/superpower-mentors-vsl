@@ -3,34 +3,25 @@
 import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CLIENT_CONFIG } from "@/config/client";
-import { getCalendarUrl } from "@/lib/scoring";
 import { ProgressBar } from "@/components/ProgressBar";
 import { WelcomeStep } from "@/components/WelcomeStep";
 import { QuestionStep } from "@/components/QuestionStep";
 import { EmailStep } from "@/components/EmailStep";
 import { SuccessStep } from "@/components/SuccessStep";
 
-// Steps: 0=Welcome, 1=Q1, 2=Q2, 3=Q3, 4=Email, 5=Success
-
 export default function ApplyPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [email, setEmail] = useState("");
-  const [calendarUrl, setCalendarUrl] = useState("");
   const advancing = useRef(false);
 
   useEffect(() => {
     if (step === 5 && email) {
-      const url = getCalendarUrl(answers);
-      setCalendarUrl(url);
-
       fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, answers }),
-      }).catch(() => {
-        // Fail silently — webhook is best-effort
-      });
+      }).catch(() => {});
     }
   }, [step, email, answers]);
 
@@ -53,7 +44,6 @@ export default function ApplyPage() {
     if (step === 0) {
       return <WelcomeStep onStart={() => setStep(1)} />;
     }
-
     if (step >= 1 && step <= 3) {
       const q = CLIENT_CONFIG.quiz.questions[step - 1];
       return (
@@ -65,15 +55,12 @@ export default function ApplyPage() {
         />
       );
     }
-
     if (step === 4) {
       return <EmailStep onSubmit={handleEmailSubmit} />;
     }
-
     if (step === 5) {
-      return <SuccessStep calendarUrl={calendarUrl} email={email} />;
+      return <SuccessStep email={email} />;
     }
-
     return null;
   }
 
@@ -81,7 +68,6 @@ export default function ApplyPage() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-start pt-12 pb-16 px-4">
       <div className="w-full max-w-[520px]">
         <ProgressBar step={step} />
-
         <AnimatePresence mode="wait">
           <motion.div
             key={step}

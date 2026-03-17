@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VSL Quiz Booking Funnel — Template
 
-## Getting Started
+A production-ready, reusable VSL quiz funnel built with Next.js 15, TypeScript, Tailwind CSS, and Framer Motion.
 
-First, run the development server:
+## How It Works
+
+1. Visitor lands on `/apply`
+2. They answer 3 qualifying questions (auto-advance on selection)
+3. They enter their email
+4. They're routed to one of 3 Cal.com/Calendly embeds based on their score
+5. Lead data is POSTed to your webhook (Zapier, Make, n8n)
+
+## Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) — it redirects to `/apply`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Customizing Per Client
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All configuration lives in **one file**: `config/client.ts`
 
-## Learn More
+### 1. Swap the Logo
+- Drop your SVG or PNG into `/public/` (e.g. `logo-clientname.svg`)
+- Update `brand.logoUrl` in `config/client.ts`:
+  ```ts
+  logoUrl: "/logo-clientname.svg",
+  ```
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Change Brand Colors
+Update these three values in `brand`:
+```ts
+primaryColor: "#2563EB",       // Main color — buttons, progress bar, accents
+primaryColorLight: "#EFF6FF",  // Light tint — option hover/selected backgrounds
+primaryColorDark: "#1D4ED8",   // Darker shade — button hover state
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Update the Headline & Subheadline
+```ts
+quiz: {
+  headline: "Find out if you qualify for [Your Service]",
+  subheadline: "Answer 3 quick questions to see if we're a fit.",
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Change the Questions
+Edit the `questions` array. Each question has a `key`, `text`, and `options`. Each option has an `id`, `label`, and `points` value.
+```ts
+questions: [
+  {
+    key: "q1",
+    text: "Your question here?",
+    options: [
+      { id: "a", label: "Option A", points: 0 },
+      { id: "b", label: "Option B", points: 1 },
+      { id: "c", label: "Option C", points: 2 },
+      { id: "d", label: "Option D", points: 3 },
+    ],
+  },
+  // ... q2, q3
+]
+```
 
-## Deploy on Vercel
+### 5. Update Calendar URLs
+```ts
+calendars: {
+  high: "https://cal.com/your-name/hot-lead",   // Score >= thresholds.high
+  mid:  "https://cal.com/your-name/warm-lead",  // Score >= thresholds.mid
+  low:  "https://cal.com/your-name/intro-call", // Score < thresholds.mid
+},
+```
+Works with Cal.com and Calendly embed URLs.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 6. Adjust Score Thresholds
+```ts
+thresholds: {
+  high: 7,  // Total points >= 7 → hot lead calendar
+  mid: 4,   // Total points >= 4 → warm lead calendar
+            // Total points < 4  → intro call calendar
+},
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 7. Connect Your Webhook
+```ts
+webhook: {
+  url: "https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID",
+}
+```
+Supports Zapier, Make.com, n8n, or any HTTP endpoint. Payload:
+```json
+{
+  "email": "user@example.com",
+  "answers": { "q1": "c", "q2": "b", "q3": "d" },
+  "timestamp": "2025-01-01T00:00:00.000Z",
+  "source": "Acme Corp"
+}
+```
+
+### 8. Update SEO Meta
+```ts
+meta: {
+  title: "Apply | Your Company Name",
+  description: "See if you qualify for our program.",
+  faviconUrl: "/favicon.ico",
+}
+```
+
+## Deploying to Vercel
+
+1. Push to GitHub
+2. Import the repo in [vercel.com](https://vercel.com)
+3. No environment variables needed (config is in `config/client.ts`)
+4. Add your custom domain in Vercel → Project → Settings → Domains
+
+## Forking for a New Client
+
+1. Fork this repository (or duplicate it)
+2. Edit `config/client.ts` only
+3. Drop new logo in `/public/`
+4. Deploy as a new Vercel project
+
+Zero other files need to change.

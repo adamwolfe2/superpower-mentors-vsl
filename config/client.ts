@@ -65,7 +65,7 @@ export const CLIENT_CONFIG = {
   },
   meta: {
     title: "Apply | Superpower Mentors",
-    description: "Find out if your child qualifies for 1-on-1 mentorship with Superpower Mentors.",
+    description: "Find out if your child qualifies for 1-on-1 mentorship with Superpower Mentors. Takes 60 seconds.",
     faviconUrl: "/favicon.ico",
   },
 };

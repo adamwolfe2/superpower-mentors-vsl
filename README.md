@@ -19,6 +19,19 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) — it redirects to `/apply`.
 
+## Deploy to Vercel
+
+1. Push this repo to GitHub (already done: github.com/adamwolfe2/superpower-mentors-vsl)
+2. Go to [vercel.com](https://vercel.com) → **Add New Project** → Import from GitHub
+3. Select `adamwolfe2/superpower-mentors-vsl`
+4. No environment variables needed — click **Deploy**
+5. Once deployed, go to **Settings → Domains** → add `superheromentor.com`
+6. Update DNS at your registrar: add a CNAME pointing `@` or `www` to `cname.vercel-dns.com`
+
+**Framework:** Next.js 15 (auto-detected)
+**Build command:** `npm run build` (auto-detected)
+**Output:** `.next` (auto-detected)
+
 ## Customizing Per Client
 
 All configuration lives in **one file**: `config/client.ts`

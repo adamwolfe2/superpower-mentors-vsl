@@ -41,7 +41,7 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
           className="inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-4"
           style={{ backgroundColor: brand.primaryColorLight, color: brand.primaryColor }}
         >
-          Free Application
+          Free Assessment
         </div>
         <h1
           className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4"
@@ -76,7 +76,7 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
             (e.currentTarget as HTMLButtonElement).style.backgroundColor = brand.primaryColor;
           }}
         >
-          Take the Quiz — It Takes 60 Seconds
+          Find Out If We're a Fit →
         </motion.button>
 
         <div className="flex items-center justify-center gap-4 mt-4">
@@ -91,7 +91,7 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Only 60 seconds
+            Takes 60 seconds
           </div>
           <div className="w-1 h-1 bg-gray-200 rounded-full" />
           <div className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -100,6 +100,23 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
             </svg>
             100% free
           </div>
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mt-5 pt-5 border-t border-gray-100">
+          <div className="flex -space-x-2">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold text-white"
+                style={{ backgroundColor: brand.primaryColor }}
+              >
+                {["J", "M", "R"][i - 1]}
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500">
+            <span className="font-semibold text-gray-800">14,000+</span> sessions completed
+          </p>
         </div>
       </motion.div>
     </div>
